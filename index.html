@@ -38,6 +38,27 @@
             background-attachment: fixed;
         }
 
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y),
+                    rgba(125, 103, 255, 0.15),
+                    transparent 40%);
+        }
+
+        body,
+        a,
+        button {
+
+            cursor: none;
+        }
+
         header {
             position: fixed;
             top: 0;
@@ -64,7 +85,16 @@
             position: relative;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-transform: uppercase;
+            will-change: transform;
+
             padding: 8px 12px;
+        }
+
+
+        .logo:focus,
+        .contact-btn:focus {
+            outline: 2px solid #9a85ff;
+            outline-offset: 2px;
         }
 
         .logo i {
@@ -89,15 +119,18 @@
         }
 
         .contact-btn {
+            text-decoration: none;
             background: rgba(255, 255, 255, 0.1);
             border: none;
             color: white;
-            font-size: 16px;
+            font-size: 1rem;
             cursor: pointer;
             letter-spacing: 1px;
             font-weight: 400;
             transition: all 0.3s ease;
             padding: 8px 20px;
+            will-change: transform;
+
             border-radius: 4px;
         }
 
@@ -124,9 +157,45 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, rgba(106, 85, 255, 0.15) 0%, transparent 70%);
+            background-image:
+
+                radial-gradient(circle at 1px 1px, rgba(125, 103, 255, 0.3) 1px, transparent 0),
+
+                radial-gradient(circle at center, rgba(106, 85, 255, 0.15) 0%, transparent 60%);
+            background-size: 35px 35px, 100% 100%;
+            background-position: center center;
             z-index: -1;
-            opacity: 0.5;
+            animation: backgroundBreathe 12s ease-in-out infinite;
+
+            transform: translateY(var(--bg-scroll-y, 0));
+            transition: transform 0.1s ease-out;
+
+        }
+
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.6;
+            transition: opacity 1s ease-in-out;
+        }
+
+        @keyframes backgroundBreathe {
+
+            0%,
+            100% {
+
+                transform: scale(1.0);
+                opacity: 0.9;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
         }
 
         .highlight {
@@ -234,6 +303,44 @@
             text-align: center;
         }
 
+
+        #about {
+            box-shadow: 0px -25px 50px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+
+        }
+
+        #services {
+            overflow: hidden;
+
+            box-shadow: 0px -25px 50px rgba(0, 0, 0, 0.5), 0px 25px 50px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+
+        }
+
+        #services::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+
+            width: 200%;
+
+            height: 100%;
+            z-index: 0;
+
+            background:
+                radial-gradient(circle at 25% 40%, rgba(125, 103, 255, 0.07) 0%, transparent 40%),
+                radial-gradient(circle at 75% 60%, rgba(125, 103, 255, 0.07) 0%, transparent 40%);
+            animation: waveAnimation 25s ease-in-out infinite;
+        }
+
+        @keyframes waveAnimation {
+            50% {
+                transform: translateX(25%);
+            }
+        }
+
         .services {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -253,6 +360,21 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             cursor: default;
         }
+
+        .service-card .glare {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 40%);
+            transform-origin: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
 
         .service-card:hover {
             transform: translateY(-10px);
@@ -288,6 +410,7 @@
             font-weight: 300;
             backdrop-filter: blur(5px);
             transition: border-color 0.3s ease;
+            width: 100%;
         }
 
         .contact-form input:focus,
@@ -477,41 +600,117 @@
                 display: block;
             }
         }
+
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #7d67ff;
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(125, 103, 255, 0.5);
+            transition: width 0.3s, height 0.3s, border-color 0.3s, transform 0.1s ease-out;
+        }
+
+        .cursor-outline.grow {
+            width: 60px;
+            height: 60px;
+            border-color: rgba(157, 133, 255, 0.8);
+        }
+
+        .cursor-outline.dragging {
+            transform: scale(0.8);
+            border-width: 3px;
+            border-color: #fff;
+        }
+
+        @media (max-width: 1024px) {
+
+            .cursor-dot,
+            .cursor-outline {
+                display: none;
+            }
+
+            body,
+            a,
+            button {
+                cursor: auto;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
     <div class="custom-scrollbar" id="customScrollbar">
         <div class="scroll-tracker" id="scrollTracker"></div>
     </div>
 
     <header>
         <a href="#" class="logo">
-            <i class="fas fa-cube"></i>
+            <i class="fas fa-cube" aria-hidden="true"></i>
+            <span class="sr-only">לוגו Pixel Tech, חזרה לראש העמוד</span>
             PIXEL TECH
         </a>
         <div class="header-buttons">
-            <button class="contact-btn">צור קשר</button>
+            <a href="#contact" class="contact-btn">צור קשר</a>
         </div>
     </header>
 
     <section class="hero">
-        <div class="highlight text-animate">אני לא בונה אתרים</div>
+        <h1 class="highlight text-animate">אני לא בונה אתרים</h1>
         <p class="subdued text-animate delay-1">אני בונה מותגים שאי אפשר לפספס</p>
         <p class="hero-footer-text text-animate delay-3">יש לך חזון? לי יש את הכלים. בוא נחבר אותם.</p>
     </section>
 
-<section id="about" style="background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(20,15,30,0.8));">
-    <h2 class="section-title text-animate">קצת עליי - והרבה על איך אני מקפיץ אותך קדימה</h2>
-    <div class="content">
-        <p class="text-animate delay-1">היי! אני זה שמאחורי הקלעים של פיקסל טק – עם קפה ביד, עכבר בשנייה, ורצון אמיתי לבנות אתר שיעבוד בשבילך.</p>
-        <p class="text-animate delay-2">היום, כשכל אחד יכול להרים אתר בסיסי בכמה קליקים, האתגר האמיתי הוא ליצור משהו שיבלוט באמת. אתר שהוא לא עוד עמוד באינטרנט, אלא נוכחות דיגיטלית חכמה, חדה, כזו שמושכת תשומת לב ומייצרת תוצאות.</p>
-        <p class="text-animate delay-3">אצלי זה לא נגמר בעיצוב יפה או בקוד מתוקתק - מאחורי כל פרויקט יש חשיבה אסטרטגית, יצירתיות מדויקת והבנה עמוקה של איך להפוך אתר לכלי עסקי שמביא לקוחות, מחזק את המותג ומשאיר את המתחרים מאחור.</p>
-        <p class="text-animate delay-4">איך עושים את זה? שילוב של ניסיון, ירידה לפרטים הכי קטנים, אהבה לטכנולוגיה ובעיקר - רצון אמיתי להפוך כל אתר למשהו מיוחד, מדויק, ובול בשבילך.</p>
-        <p class="text-animate delay-5">בין אם זה האתר הראשון של העסק שלך, שדרוג נוכחות קיימת או רעיון גדול שמחכה לפרוץ החוצה - אני כאן כדי לגרום לזה לקרות.</p>
-        <p class="text-animate delay-6">זה לא עוד אתר. זו נוכחות דיגיטלית עם משמעות - בוא ניצור אותה יחד.</p>
-    </div>
-</section>
+    <section id="about" style="background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(20,15,30,0.8));">
+        <h2 class="section-title text-animate">קצת עליי - והרבה על איך אני מקפיץ אותך קדימה</h2>
+        <div class="content">
+            <p class="text-animate delay-1">היי! אני זה שמאחורי הקלעים של פיקסל טק – עם קפה ביד, עכבר בשנייה, ורצון
+                אמיתי לבנות אתר שיעבוד בשבילך.</p>
+            <p class="text-animate delay-2">היום, כשכל אחד יכול להרים אתר בסיסי בכמה קליקים, האתגר האמיתי הוא ליצור משהו
+                שיבלוט באמת. אתר שהוא לא עוד עמוד באינטרנט, אלא נוכחות דיגיטלית חכמה, חדה, כזו שמושכת תשומת לב ומייצרת
+                תוצאות.</p>
+            <p class="text-animate delay-3">אצלי זה לא נגמר בעיצוב יפה או בקוד מתוקתק - מאחורי כל פרויקט יש חשיבה
+                אסטרטגית, יצירתיות מדויקת והבנה עמוקה של איך להפוך אתר לכלי עסקי שמביא לקוחות, מחזק את המותג ומשאיר את
+                המתחרים מאחור.</p>
+            <p class="text-animate delay-4">איך עושים את זה? שילוב של ניסיון, ירידה לפרטים הכי קטנים, אהבה לטכנולוגיה
+                ובעיקר - רצון אמיתי להפוך כל אתר למשהו מיוחד, מדויק, ובול בשבילך.</p>
+            <p class="text-animate delay-5">בין אם זה האתר הראשון של העסק שלך, שדרוג נוכחות קיימת או רעיון גדול שמחכה
+                לפרוץ החוצה - אני כאן כדי לגרום לזה לקרות.</p>
+            <p class="text-animate delay-6">זה לא עוד אתר. זו נוכחות דיגיטלית עם משמעות - בוא ניצור אותה יחד.</p>
+        </div>
+    </section>
 
 
     <section id="services" style="background: linear-gradient(to bottom, rgba(15,10,25,0.9), rgba(25,20,35,0.9));">
@@ -540,12 +739,22 @@
             <p class="text-animate delay-1">הדיגיטל מחכה לכוכב חדש. מוכן להיות זה? דבר איתי ונעשה את זה בגדול.</p>
         </div>
         <form class="contact-form" action="https://formspree.io/f/xblywzpg" method="POST">
-            <input type="text" name="name" placeholder="שם מלא" required class="text-animate delay-2">
-            <input type="email" name="email" placeholder="אימייל" required class="text-animate delay-3">
-            <input type="tel" name="phone" placeholder="טלפון" dir="ltr" class="text-animate delay-4">
-            <textarea name="message" placeholder="ספרו לי על הפרויקט שלכם..." required
+            <div>
+                <label for="name" class="sr-only">שם מלא</label>
+                <input type="text" id="name" name="name" placeholder="שם מלא" required class="text-animate delay-2">
+            </div>
+            <div>
+                <label for="email" class="sr-only">אימייל</label>
+                <input type="email" id="email" name="email" placeholder="אימייל" required class="text-animate delay-3">
+            </div>
+            <div>
+                <label for="phone" class="sr-only">טלפון</label>
+                <input type="tel" id="phone" name="phone" placeholder="טלפון" dir="ltr" class="text-animate delay-4">
+            </div>
+            <label for="message" class="sr-only">ספרו לי על הפרויקט שלכם...</label>
+            <textarea id="message" name="message" placeholder="ספרו לי על הפרויקט שלכם..." required
                 class="text-animate delay-5"></textarea>
-            <button type="submit" class="text-animate delay-6">שלחו הודעה</button>
+            <button type="submit" class="text-animate delay-6">שלח הודעה</button>
         </form>
     </section>
 
@@ -589,13 +798,6 @@
                 updateScrollProgress();
             });
 
-            const contactBtn = document.querySelector('.contact-btn');
-            contactBtn.addEventListener('click', function () {
-                document.getElementById('contact').scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-
             const logo = document.querySelector('.logo');
             logo.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -631,6 +833,261 @@
                 document.querySelector('.hero .text-animate.delay-3').classList.add('visible');
             }, 300);
         });
+
+        const heroSection = document.querySelector('.hero');
+        const heroBeforeElement = document.querySelector('.hero::before');
+
+        window.addEventListener('scroll', function () {
+            let offset = window.pageYOffset;
+
+            if (offset < window.innerHeight) {
+                heroSection.style.setProperty('--bg-scroll-y', (offset * 0.5) + 'px');
+            }
+        });
+
+
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        let isDragging = false;
+        let startY;
+        let startScrollTop;
+        const body = document.body;
+
+        document.addEventListener('mousemove', e => {
+            document.body.style.setProperty('--mouse-x', `${e.clientX}px`);
+            document.body.style.setProperty('--mouse-y', `${e.clientY}px`);
+        });
+
+        window.addEventListener('mousemove', function (e) {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            cursorOutline.style.left = `${posX}px`;
+            cursorOutline.style.top = `${posY}px`;
+
+            if (isDragging) {
+
+                e.preventDefault();
+                const walk = (e.clientY - startY);
+                window.scrollTo(0, startScrollTop - walk);
+            }
+        });
+
+        window.addEventListener('mousedown', (e) => {
+
+            if (e.target.closest('a, button, input, textarea')) {
+                return;
+            }
+
+            if (body.scrollWidth > body.clientWidth) {
+                return;
+            }
+
+            isDragging = true;
+            startY = e.clientY;
+            startScrollTop = window.pageYOffset;
+            cursorOutline.classList.add('dragging');
+            body.style.userSelect = 'none';
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                cursorOutline.classList.remove('dragging');
+                body.style.userSelect = '';
+            }
+        });
+
+        const interactiveElements = document.querySelectorAll('a, button, .service-card');
+
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline.classList.add('grow');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline.classList.remove('grow');
+            });
+        });
+
+
+        function handleMagneticEffect() {
+            const magneticElements = document.querySelectorAll('.logo, .contact-btn');
+            const strength = 50;
+            const radius = 150;
+
+            magneticElements.forEach(el => {
+                el.addEventListener('mousemove', function (e) {
+                    const rect = el.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    const mouseX = e.clientX;
+                    const mouseY = e.clientY;
+
+                    const deltaX = Math.floor((mouseX - centerX) / 2);
+                    const deltaY = Math.floor((mouseY - centerY) / 2);
+
+                    el.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                });
+
+                el.addEventListener('mouseleave', function () {
+                    el.style.transform = 'translate(0, 0)';
+                });
+            });
+        }
+
+
+        if (window.matchMedia("(min-width: 1025px)").matches) {
+            handleMagneticEffect();
+        }
+        window.addEventListener('resize', () => {
+            if (window.matchMedia("(min-width: 1025px)").matches) {
+                handleMagneticEffect();
+            }
+        });
+
+
+        function handle3DTiltEffect() {
+            const cards = document.querySelectorAll('.service-card');
+            const maxTilt = 15;
+
+            cards.forEach(card => {
+                const glare = card.querySelector('.glare');
+                const contentElements = card.querySelectorAll('h3, p');
+
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const width = rect.width;
+                    const height = rect.height;
+
+                    const rotateX = maxTilt * ((y / height) - 0.5) * -1;
+                    const rotateY = maxTilt * ((x / width) - 0.5);
+
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+                    contentElements.forEach(el => {
+                        el.style.transform = 'translateZ(20px)';
+                        el.style.textShadow = '0 2px 10px rgba(0,0,0,0.5)';
+                    });
+
+
+                    if (glare) {
+                        const glareX = (x / width) * 100;
+                        const glareY = (y / height) * 100;
+
+                        glare.style.transform = `translateX(${glareX}%) translateY(${glareY}%) rotate(0.001deg)`;
+                        glare.style.opacity = '1';
+                    }
+                });
+
+                card.addEventListener('mouseleave', () => {
+
+                    card.style.transition = 'transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)';
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+                    contentElements.forEach(el => {
+                        el.style.transform = 'translateZ(0px)';
+                        el.style.textShadow = 'none';
+                    });
+
+
+                    if (glare) {
+                        glare.style.opacity = '0';
+                    }
+
+
+                    setTimeout(() => {
+                        card.style.transition = '';
+                    }, 500);
+                });
+            });
+        }
+
+        if (window.matchMedia("(min-width: 1025px)").matches) {
+            handle3DTiltEffect();
+        }
+
+
+        function handleParticleBackground() {
+            const canvas = document.getElementById('particle-canvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let animationFrameId;
+
+            function resizeCanvas() {
+                canvas.width = heroSection.offsetWidth;
+                canvas.height = heroSection.offsetHeight;
+                createParticles();
+            }
+
+            const mouse = {
+                x: null,
+                y: null,
+                radius: 150
+            };
+
+            window.addEventListener('mousemove', e => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+            window.addEventListener('mouseout', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
+            class Particle {
+                constructor(x, y, dirX, dirY, size, color) {
+                    this.x = x; this.y = y; this.dirX = dirX; this.dirY = dirY;
+                    this.size = size; this.color = color;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+                update() {
+                    if (this.x > canvas.width || this.x < 0) { this.dirX = -this.dirX; }
+                    if (this.y > canvas.height || this.y < 0) { this.dirY = -this.dirY; }
+                    this.x += this.dirX; this.y += this.dirY;
+                    this.draw();
+                }
+            }
+
+            function createParticles() {
+                particles = [];
+                const numberOfParticles = (canvas.height * canvas.width) / 9000;
+                for (let i = 0; i < numberOfParticles; i++) {
+                    let size = (Math.random() * 2) + 1;
+                    let x = (Math.random() * ((canvas.width - size * 2) - (size * 2)) + size * 2);
+                    let y = (Math.random() * ((canvas.height - size * 2) - (size * 2)) + size * 2);
+                    let dirX = (Math.random() * .4) - .2;
+                    let dirY = (Math.random() * .4) - .2;
+                    particles.push(new Particle(x, y, dirX, dirY, size, 'rgba(125, 103, 255, 0.8)'));
+                }
+            }
+
+            function animate() {
+                animationFrameId = requestAnimationFrame(animate);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => p.update());
+            }
+
+            resizeCanvas();
+            animate();
+            window.addEventListener('resize', () => {
+                cancelAnimationFrame(animationFrameId);
+                resizeCanvas();
+                animate();
+            });
+        }
+        handleParticleBackground();
     </script>
 </body>
 
