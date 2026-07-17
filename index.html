@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pixel Tech</title>
-    <link rel="icon" type="image/svg+xml"
-        href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="%237d67ff" d="M234.5 5.7c13.9-5.1 29.1-5.1 43.1 0l192 70.4c14.5 5.3 23.5 19.9 23.5 35.5v288c0 15.6-9 30.2-23.5 35.5l-192 70.4c-13.9 5.1-29.1 5.1-43.1 0l-192-70.4C9 469.8 0 455.2 0 439.6v-288c0-15.6 9-30.2 23.5-35.5l192-70.4zm20.5 84.2l128 46.7v174.2l-128 46.7-128-46.7V136.6l128-46.7z"/></svg>'>
+    <link rel="icon" type="image/png" href="logo/logo-mark-trimmed.png">
     <link
         href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Montserrat:wght@600;700&display=swap"
         rel="stylesheet">
@@ -50,6 +49,21 @@
             background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y),
                     rgba(125, 103, 255, 0.15),
                     transparent 40%);
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9990;
+            pointer-events: none;
+            opacity: 0.05;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 200px 200px;
         }
 
         body,
@@ -97,20 +111,19 @@
             outline-offset: 2px;
         }
 
-        .logo i {
-            color: #7d67ff;
-            transition: transform 0.4s ease, color 0.3s ease;
-            font-size: 1.4rem;
+        .logo img {
+            height: 34px;
+            width: auto;
+            transition: transform 0.4s ease, filter 0.3s ease;
         }
 
         .logo:hover {
             letter-spacing: 3px;
         }
 
-        .logo:hover i {
+        .logo:hover img {
             transform: rotate(20deg) scale(1.1);
-            color: #9a85ff;
-            text-shadow: 0 0 15px rgba(157, 133, 255, 0.5);
+            filter: drop-shadow(0 0 15px rgba(157, 133, 255, 0.5));
         }
 
         .header-buttons {
@@ -204,14 +217,41 @@
             margin-bottom: 20px;
             letter-spacing: -3px;
             line-height: 1;
-            background: linear-gradient(45deg, #ffffff, #b0b0b0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
             position: relative;
             display: inline-block;
             padding-bottom: 20px;
             text-shadow: 0 0 20px rgba(106, 85, 255, 0.3);
+        }
+
+        .highlight .letter {
+            display: inline-block;
+            background: linear-gradient(90deg, #ffffff, #9a85ff, #ffffff, #b0b0b0);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: letterShimmer 5s ease-in-out infinite;
+        }
+
+        .highlight .letter.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes letterShimmer {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
         }
 
         .highlight::after {
@@ -343,22 +383,63 @@
 
         .services {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, minmax(220px, auto));
+            gap: 24px;
             width: 100%;
             max-width: 1000px;
             margin-top: 50px;
         }
 
         .service-card {
+            position: relative;
+            overflow: hidden;
             background: rgba(30, 30, 30, 0.6);
-            border-radius: 8px;
-            padding: 30px;
-            transition: transform 0.3s ease, background 0.3s ease;
+            border-radius: 16px;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             cursor: default;
+        }
+
+        .service-card--feature {
+            grid-column: 1 / 2;
+            grid-row: 1 / 3;
+        }
+
+        .service-card:nth-of-type(2) {
+            grid-column: 2 / 3;
+            grid-row: 1 / 2;
+        }
+
+        .service-card:nth-of-type(3) {
+            grid-column: 2 / 3;
+            grid-row: 2 / 3;
+        }
+
+        .service-number {
+            position: absolute;
+            top: -0.25em;
+            left: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 6rem;
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(135deg, rgba(125, 103, 255, 0.4), rgba(125, 103, 255, 0.05));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .service-card--feature .service-number {
+            font-size: 8rem;
         }
 
         .service-card .glare {
@@ -536,6 +617,23 @@
 
             .services {
                 grid-template-columns: 1fr;
+                grid-template-rows: none;
+            }
+
+            .service-card,
+            .service-card--feature,
+            .service-card:nth-of-type(2),
+            .service-card:nth-of-type(3) {
+                grid-column: auto;
+                grid-row: auto;
+            }
+
+            .service-number {
+                font-size: 4rem;
+            }
+
+            .service-card--feature .service-number {
+                font-size: 4rem;
             }
 
             .section-title {
@@ -678,7 +776,7 @@
 
     <header>
         <a href="#" class="logo">
-            <i class="fas fa-cube" aria-hidden="true"></i>
+            <img src="logo/logo-mark-trimmed.png" alt="" aria-hidden="true">
             <span class="sr-only">לוגו Pixel Tech, חזרה לראש העמוד</span>
             PIXEL TECH
         </a>
@@ -688,7 +786,7 @@
     </header>
 
     <section class="hero">
-        <h1 class="highlight text-animate">אני לא בונה אתרים</h1>
+        <h1 class="highlight">אני לא בונה אתרים</h1>
         <p class="subdued text-animate delay-1">אני בונה מותגים שאי אפשר לפספס</p>
         <p class="hero-footer-text text-animate delay-3">יש לך חזון? לי יש את הכלים. בוא נחבר אותם.</p>
     </section>
@@ -716,16 +814,19 @@
     <section id="services" style="background: linear-gradient(to bottom, rgba(15,10,25,0.9), rgba(25,20,35,0.9));">
         <h2 class="section-title text-animate">הכלים והחשיבה מאחורי כל אתר שאני בונה</h2>
         <div class="services">
-            <div class="service-card">
+            <div class="service-card service-card--feature">
+                <span class="service-number" aria-hidden="true">01</span>
                 <h3 class="text-animate">אסטרטגיה דיגיטלית</h3>
                 <p class="text-animate delay-1">פיתוח תוכנית פעולה מותאמת אישית שמשלבת את כל ערוצי השיווק הדיגיטלי לכדי
                     אסטרטגיה מגובשת.</p>
             </div>
             <div class="service-card">
+                <span class="service-number" aria-hidden="true">02</span>
                 <h3 class="text-animate delay-2">עיצוב מותג</h3>
                 <p class="text-animate delay-3">יצירת שפה ויזואלית עקבית ומרשימה שעוברת בכל נקודות המגע עם הלקוח.</p>
             </div>
             <div class="service-card">
+                <span class="service-number" aria-hidden="true">03</span>
                 <h3 class="text-animate delay-4">פיתוח דיגיטלי</h3>
                 <p class="text-animate delay-5">בניית פלטפורמות דיגיטליות מתקדמות עם טכנולוגיות עדכניות וחוויית משתמש
                     מושלמת.</p>
@@ -765,6 +866,22 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            function splitHeroTitle() {
+                const heading = document.querySelector('.highlight');
+                if (!heading) return;
+                const text = heading.textContent;
+                heading.textContent = '';
+                text.split('').forEach((char, i) => {
+                    const span = document.createElement('span');
+                    span.className = 'letter';
+                    span.style.transitionDelay = `${i * 35}ms`;
+                    span.style.animationDelay = `${i * 80}ms`;
+                    span.textContent = char === ' ' ? ' ' : char;
+                    heading.appendChild(span);
+                });
+            }
+            splitHeroTitle();
+
             const scrollTracker = document.getElementById('scrollTracker');
             const customScrollbar = document.getElementById('customScrollbar');
             let scrollbarVisible = false;
@@ -828,7 +945,7 @@
             handleTextAnimations();
 
             setTimeout(() => {
-                document.querySelector('.hero .text-animate').classList.add('visible');
+                document.querySelectorAll('.hero .letter').forEach(letter => letter.classList.add('visible'));
                 document.querySelector('.hero .text-animate.delay-1').classList.add('visible');
                 document.querySelector('.hero .text-animate.delay-3').classList.add('visible');
             }, 300);
