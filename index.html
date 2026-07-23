@@ -83,7 +83,21 @@
             justify-content: space-between;
             align-items: center;
             z-index: 100;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        .header-scrim {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 180px;
+            z-index: 90;
+            pointer-events: none;
+            background: linear-gradient(to bottom,
+                    rgba(0, 0, 0, 0.85) 0%,
+                    rgba(0, 0, 0, 0.55) 35%,
+                    rgba(0, 0, 0, 0.22) 65%,
+                    rgba(0, 0, 0, 0) 100%);
         }
 
         .logo {
@@ -212,15 +226,20 @@
         }
 
         .highlight {
-            font-size: 8rem;
+            font-size: clamp(2.4rem, 15vw, 8rem);
             font-weight: 700;
             margin-bottom: 20px;
             letter-spacing: -3px;
-            line-height: 1;
+            line-height: 1.15;
             position: relative;
             display: inline-block;
             padding-bottom: 20px;
             text-shadow: 0 0 20px rgba(106, 85, 255, 0.3);
+        }
+
+        .highlight .word {
+            display: inline-block;
+            white-space: nowrap;
         }
 
         .highlight .letter {
@@ -471,6 +490,186 @@
             color: #b0b0ff;
         }
 
+        #portfolio {
+            overflow: hidden;
+            box-shadow: 0px -25px 50px rgba(0, 0, 0, 0.5), 0px 25px 50px rgba(0, 0, 0, 0.5);
+            z-index: 3;
+            padding: 70px 20px 50px;
+        }
+
+        #portfolio .section-title {
+            margin-bottom: 55px;
+        }
+
+        #portfolio::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            z-index: 0;
+            background:
+                radial-gradient(circle at 30% 30%, rgba(125, 103, 255, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 70% 70%, rgba(125, 103, 255, 0.06) 0%, transparent 45%);
+            animation: waveAnimation 25s ease-in-out infinite;
+        }
+
+        .portfolio-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+            width: 100%;
+            max-width: 1050px;
+            margin-top: 28px;
+            text-align: right;
+        }
+
+        .portfolio-card {
+            position: relative;
+            background: rgba(30, 30, 30, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .portfolio-card:hover {
+                transform: translateY(-8px);
+                border-color: rgba(106, 85, 255, 0.4);
+                box-shadow: 0 15px 35px rgba(106, 85, 255, 0.25);
+            }
+        }
+
+        .portfolio-visit {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(20, 15, 30, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(6px);
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .portfolio-card:hover .portfolio-visit {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .portfolio-media {
+            direction: ltr;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 18px;
+            padding: 22px 24px 20px;
+            background: radial-gradient(circle at 50% 20%, rgba(125, 103, 255, 0.15), transparent 70%);
+        }
+
+        .portfolio-media img {
+            display: block;
+            height: auto;
+        }
+
+        .portfolio-media .device-desktop {
+            width: 220px;
+            filter: drop-shadow(0 18px 20px rgba(0, 0, 0, 0.5));
+            transform: translateZ(0);
+        }
+
+        .portfolio-media .device-mobile {
+            width: 84px;
+            filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.5));
+            transform: translateZ(0);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+
+            .portfolio-media .device-desktop,
+            .portfolio-media .device-mobile {
+                transition: transform 0.3s ease;
+                will-change: transform;
+            }
+        }
+
+        @keyframes floatDesktop {
+
+            0%,
+            100% {
+                transform: translateY(0) translateZ(0);
+            }
+
+            50% {
+                transform: translateY(-7px) translateZ(0);
+            }
+        }
+
+        @keyframes floatMobile {
+
+            0%,
+            100% {
+                transform: translateY(0) translateZ(0);
+            }
+
+            50% {
+                transform: translateY(-7px) translateZ(0);
+            }
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .portfolio-card:hover .device-desktop {
+                animation: floatDesktop 3.2s ease-in-out infinite;
+            }
+
+            .portfolio-card:hover .device-mobile {
+                animation: floatMobile 2.6s ease-in-out infinite;
+                animation-delay: 0.7s;
+            }
+        }
+
+
+        .portfolio-body {
+            padding: 22px 28px 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .portfolio-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .portfolio-desc {
+            font-size: 1rem;
+            line-height: 1.75;
+            opacity: 0.85;
+            font-weight: 300;
+        }
+
         .contact-form {
             display: flex;
             flex-direction: column;
@@ -576,17 +775,35 @@
         .custom-scrollbar {
             position: fixed;
             top: 50%;
-            right: 50px;
+            right: 38px;
             transform: translateY(-50%);
-            width: 4px;
+            width: 28px;
             height: 200px;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 0;
             display: none;
             opacity: 0;
+            cursor: pointer;
             transform: translateY(-50%) translateY(-100px);
             transition: opacity 0.5s ease, transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .custom-scrollbar::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.15);
+            transition: width 0.2s ease, background 0.2s ease;
+        }
+
+        .custom-scrollbar:hover::before,
+        .custom-scrollbar.dragging::before {
+            width: 8px;
+            background: rgba(255, 255, 255, 0.22);
         }
 
         .custom-scrollbar.visible {
@@ -597,18 +814,39 @@
         .scroll-tracker {
             position: absolute;
             top: 0;
-            right: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 4px;
-            height: 0;
-            background: #6a55ff;
-            border-radius: 0;
-            transition: height 0.1s ease;
+            height: 40px;
+            background: linear-gradient(180deg, #9a85ff, #6a55ff);
+            border-radius: 999px;
+            cursor: grab;
+            transition: top 0.1s linear, transform 0.2s ease;
             box-shadow: 0 0 10px rgba(106, 85, 255, 0.5);
         }
 
+        .custom-scrollbar:hover .scroll-tracker,
+        .custom-scrollbar.dragging .scroll-tracker {
+            transform: translateX(-50%) scaleX(1.3);
+        }
+
+        .custom-scrollbar.dragging .scroll-tracker {
+            cursor: grabbing;
+        }
+
         @media (max-width: 768px) {
-            .highlight {
-                font-size: 4rem;
+            .portfolio-card,
+            .portfolio-media .device-desktop,
+            .portfolio-media .device-mobile {
+                animation: none !important;
+                transition: none !important;
+                transform: none !important;
+                filter: none !important;
+                will-change: auto !important;
+            }
+
+            .header-scrim {
+                height: 130px;
             }
 
             .subdued {
@@ -640,6 +878,22 @@
                 font-size: 2rem;
             }
 
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .portfolio-media .device-desktop {
+                width: 180px;
+            }
+
+            .portfolio-media .device-mobile {
+                width: 68px;
+            }
+
+            .portfolio-body {
+                padding: 20px 22px 24px;
+            }
+
             .header-buttons {
                 gap: 15px;
             }
@@ -661,10 +915,6 @@
         }
 
         @media (max-width: 480px) {
-            .highlight {
-                font-size: 3rem;
-            }
-
             .subdued {
                 font-size: 1.2rem;
             }
@@ -696,6 +946,43 @@
         @media (min-width: 1024px) {
             .custom-scrollbar {
                 display: block;
+            }
+        }
+
+        @media (min-width: 1024px) and (max-height: 820px) {
+            #portfolio {
+                padding: 45px 20px 25px;
+            }
+
+            #portfolio .section-title {
+                margin-bottom: 22px;
+            }
+
+            .portfolio-grid {
+                margin-top: 20px;
+                gap: 18px;
+            }
+
+            .portfolio-media {
+                padding: 14px 20px 14px;
+            }
+
+            .portfolio-media .device-desktop {
+                width: 165px;
+            }
+
+            .portfolio-media .device-mobile {
+                width: 64px;
+            }
+
+            .portfolio-body {
+                padding: 14px 22px 16px;
+                gap: 8px;
+            }
+
+            .portfolio-desc {
+                font-size: 0.88rem;
+                line-height: 1.45;
             }
         }
 
@@ -750,10 +1037,38 @@
             border-color: #fff;
         }
 
+        .cursor-view {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10000;
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0.5);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #7d67ff, #6a55ff);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            box-shadow: 0 8px 25px rgba(106, 85, 255, 0.4);
+            opacity: 0;
+            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .cursor-view.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
         @media (max-width: 1024px) {
 
             .cursor-dot,
-            .cursor-outline {
+            .cursor-outline,
+            .cursor-view {
                 display: none;
             }
 
@@ -769,10 +1084,13 @@
 <body>
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
+    <div class="cursor-view"><i class="fa-solid fa-up-right-from-square" aria-hidden="true"></i>לאתר</div>
 
     <div class="custom-scrollbar" id="customScrollbar">
         <div class="scroll-tracker" id="scrollTracker"></div>
     </div>
+
+    <div class="header-scrim" aria-hidden="true"></div>
 
     <header>
         <a href="#" class="logo">
@@ -834,6 +1152,46 @@
         </div>
     </section>
 
+    <section id="portfolio" style="background: linear-gradient(to bottom, rgba(15,10,25,0.9), rgba(20,15,30,0.85));">
+        <h2 class="section-title text-animate">עבודות שכבר יצאו לדרך</h2>
+        <div class="portfolio-grid">
+            <a href="https://www.praline.co.il" target="_blank" rel="noopener noreferrer" id="stProjectCard"
+                class="portfolio-card portfolio-card--live text-animate delay-2"
+                aria-label="בקרו באתר ST - יוקרה בטעם שוקולד (נפתח בלשונית חדשה)">
+                <span class="portfolio-visit"><i class="fa-solid fa-up-right-from-square"
+                        aria-hidden="true"></i>לאתר</span>
+                <div class="portfolio-media">
+                    <img src="פרוייקטים/ST/מחשב-trimmed.png" alt="תצוגת אתר ST על מסך מחשב" class="device-desktop"
+                        width="1355" height="1644" loading="lazy" decoding="async">
+                    <img src="פרוייקטים/ST/טלפון-trimmed.png" alt="תצוגת אתר ST על מסך נייד" class="device-mobile"
+                        width="1617" height="2805" loading="lazy" decoding="async">
+                </div>
+                <div class="portfolio-body">
+                    <h3 class="portfolio-title">ST | יוקרה בטעם שוקולד</h3>
+                    <p class="portfolio-desc">אתר תדמית ומכירה לבוטיק שוקולד יוקרתי. עיצוב אלגנטי שמעביר את הניחוח
+                        והאיכות של המותג ישר מהמסך, עם קטלוג מוצרים נבחרים וחוויית גלישה חלקה ומדויקת בכל מכשיר.</p>
+                </div>
+            </a>
+            <a href="https://beishamedrish.com" target="_blank" rel="noopener noreferrer" id="beitMidrashCard"
+                class="portfolio-card portfolio-card--live text-animate delay-3"
+                aria-label="בקרו באתר בית המדרש - לימוד עם חברותא אונליין (נפתח בלשונית חדשה)">
+                <span class="portfolio-visit"><i class="fa-solid fa-up-right-from-square"
+                        aria-hidden="true"></i>לאתר</span>
+                <div class="portfolio-media">
+                    <img src="פרוייקטים/בית המדרש/מחשב-trimmed.png" alt="תצוגת אתר בית המדרש על מסך מחשב"
+                        class="device-desktop" width="1355" height="1644" loading="lazy" decoding="async">
+                    <img src="פרוייקטים/בית המדרש/נייד-trimmed.png" alt="תצוגת אתר בית המדרש על מסך נייד"
+                        class="device-mobile" width="1617" height="2805" loading="lazy" decoding="async">
+                </div>
+                <div class="portfolio-body">
+                    <h3 class="portfolio-title">בית המדרש | לימוד עם חברותא אונליין</h3>
+                    <p class="portfolio-desc">פלטפורמת למידה דיגיטלית לבית מדרש - חיבור לחברותא ללימוד משותף בווידאו
+                        ובצ'אט, מעקב התקדמות אישי, ניקוד והישגים, ותזכורות לימוד יומיות - הכל במקום אחד.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
     <section id="contact" style="background: linear-gradient(to bottom, rgba(10,5,20,0.9), rgba(0,0,0,0.9));">
         <h2 class="section-title text-animate">צור קשר</h2>
         <div class="content">
@@ -871,13 +1229,25 @@
                 if (!heading) return;
                 const text = heading.textContent;
                 heading.textContent = '';
-                text.split('').forEach((char, i) => {
-                    const span = document.createElement('span');
-                    span.className = 'letter';
-                    span.style.transitionDelay = `${i * 35}ms`;
-                    span.style.animationDelay = `${i * 80}ms`;
-                    span.textContent = char === ' ' ? ' ' : char;
-                    heading.appendChild(span);
+                const words = text.split(' ');
+                let i = 0;
+                words.forEach((word, wi) => {
+                    const wordSpan = document.createElement('span');
+                    wordSpan.className = 'word';
+                    word.split('').forEach((char) => {
+                        const span = document.createElement('span');
+                        span.className = 'letter';
+                        span.style.transitionDelay = `${i * 35}ms`;
+                        span.style.animationDelay = `${i * 80}ms`;
+                        span.textContent = char;
+                        wordSpan.appendChild(span);
+                        i++;
+                    });
+                    heading.appendChild(wordSpan);
+                    if (wi < words.length - 1) {
+                        heading.appendChild(document.createTextNode(' '));
+                        i++;
+                    }
                 });
             }
             splitHeroTitle();
@@ -885,15 +1255,33 @@
             const scrollTracker = document.getElementById('scrollTracker');
             const customScrollbar = document.getElementById('customScrollbar');
             let scrollbarVisible = false;
+            let isScrollbarDragging = false;
+
+            let maxScrollCache = 0;
+            let trackHeightCache = 0;
+            let thumbHeightCache = 0;
+
+            function getMaxScroll() {
+                return maxScrollCache;
+            }
+
+            function recalcScrollMetrics() {
+                maxScrollCache = document.documentElement.scrollHeight - window.innerHeight;
+                trackHeightCache = customScrollbar.clientHeight;
+                const ratio = window.innerHeight / document.documentElement.scrollHeight;
+                thumbHeightCache = Math.max(30, Math.min(trackHeightCache, ratio * trackHeightCache));
+                scrollTracker.style.height = `${thumbHeightCache}px`;
+                updateScrollProgress();
+            }
 
             function updateScrollProgress() {
-                const windowHeight = window.innerHeight;
-                const documentHeight = document.documentElement.scrollHeight - windowHeight;
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const scrollPercent = maxScrollCache > 0 ? scrollTop / maxScrollCache : 0;
 
-                const scrollPercent = (scrollTop / documentHeight) * 100;
-
-                scrollTracker.style.height = `${scrollPercent}%`;
+                if (!isScrollbarDragging) {
+                    const top = scrollPercent * (trackHeightCache - thumbHeightCache);
+                    scrollTracker.style.top = `${top}px`;
+                }
 
                 if (scrollTop > 50 && !scrollbarVisible) {
                     customScrollbar.classList.add('visible');
@@ -904,15 +1292,50 @@
                 }
             }
 
-            updateScrollProgress();
+            recalcScrollMetrics();
 
             window.addEventListener('scroll', function () {
                 updateScrollProgress();
                 handleTextAnimations();
-            });
+            }, { passive: true });
 
             window.addEventListener('resize', function () {
-                updateScrollProgress();
+                recalcScrollMetrics();
+            });
+
+            window.addEventListener('load', recalcScrollMetrics);
+
+            function scrollToTrackPosition(clientY) {
+                const rect = customScrollbar.getBoundingClientRect();
+                const thumbHeight = scrollTracker.offsetHeight;
+                const usableTrack = rect.height - thumbHeight;
+                const relativeY = clientY - rect.top - thumbHeight / 2;
+                const fraction = Math.max(0, Math.min(1, relativeY / usableTrack));
+                return fraction * getMaxScroll();
+            }
+
+            scrollTracker.addEventListener('mousedown', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                isScrollbarDragging = true;
+                customScrollbar.classList.add('dragging');
+            });
+
+            customScrollbar.addEventListener('click', function (e) {
+                if (e.target === scrollTracker) return;
+                window.scrollTo({ top: scrollToTrackPosition(e.clientY), behavior: 'smooth' });
+            });
+
+            window.addEventListener('mousemove', function (e) {
+                if (!isScrollbarDragging) return;
+                window.scrollTo(0, scrollToTrackPosition(e.clientY));
+            });
+
+            window.addEventListener('mouseup', function () {
+                if (isScrollbarDragging) {
+                    isScrollbarDragging = false;
+                    customScrollbar.classList.remove('dragging');
+                }
             });
 
             const logo = document.querySelector('.logo');
@@ -960,11 +1383,12 @@
             if (offset < window.innerHeight) {
                 heroSection.style.setProperty('--bg-scroll-y', (offset * 0.5) + 'px');
             }
-        });
+        }, { passive: true });
 
 
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorOutline = document.querySelector('.cursor-outline');
+        const cursorView = document.querySelector('.cursor-view');
         let isDragging = false;
         let startY;
         let startScrollTop;
@@ -985,6 +1409,9 @@
             cursorOutline.style.left = `${posX}px`;
             cursorOutline.style.top = `${posY}px`;
 
+            cursorView.style.left = `${posX}px`;
+            cursorView.style.top = `${posY}px`;
+
             if (isDragging) {
 
                 e.preventDefault();
@@ -995,7 +1422,11 @@
 
         window.addEventListener('mousedown', (e) => {
 
-            if (e.target.closest('a, button, input, textarea')) {
+            if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                return;
+            }
+
+            if (e.target.closest('a, button, input, textarea, .custom-scrollbar')) {
                 return;
             }
 
@@ -1018,7 +1449,7 @@
             }
         });
 
-        const interactiveElements = document.querySelectorAll('a, button, .service-card');
+        const interactiveElements = document.querySelectorAll('a:not(.portfolio-card--live), button, .service-card, .portfolio-card:not(.portfolio-card--live), .custom-scrollbar');
 
         interactiveElements.forEach(el => {
             el.addEventListener('mouseenter', () => {
@@ -1026,6 +1457,19 @@
             });
             el.addEventListener('mouseleave', () => {
                 cursorOutline.classList.remove('grow');
+            });
+        });
+
+        document.querySelectorAll('.portfolio-card--live').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                cursorView.classList.add('active');
+                cursorDot.style.opacity = '0';
+                cursorOutline.style.opacity = '0';
+            });
+            card.addEventListener('mouseleave', () => {
+                cursorView.classList.remove('active');
+                cursorDot.style.opacity = '1';
+                cursorOutline.style.opacity = '1';
             });
         });
 
